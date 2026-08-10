@@ -45,32 +45,32 @@ const Sidebar = () => {
 
   // Menu items definition with explicit role/department authorization
   const crmItems = [
-    { name: 'CRM Sales Portal', path: '/crm', icon: Briefcase, roles: ['Super Admin', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager', 'Production Manager', 'Finance Manager', 'Finance', 'Warehouse Manager', 'Purchase Manager', 'Purchase Employee'] },
-    // { name: 'Inventory Master', path: '/manufacturing/inventory', icon: Boxes, roles: ['Super Admin', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager'] },
-    { name: 'AI Sales Prediction', path: '/ai-prediction', icon: Sparkles, roles: ['Super Admin', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee'] },
-    { name: 'Real-Time Analytics', path: '/analytics', icon: Activity, roles: ['Super Admin', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Finance Manager', 'Finance', 'Manager'] },
+    { name: 'CRM Sales Portal', path: '/crm', icon: Briefcase, roles: ['', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager', 'Production Manager', 'Finance Manager', 'Finance', 'Warehouse Manager', 'Purchase Manager', 'Purchase Employee'] },
+    { name: 'Inventory Master', path: '/manufacturing/inventory', icon: Boxes, roles: ['', 'Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager'] },
+    { name: 'AI Sales Prediction', path: '/ai-prediction', icon: Sparkles, roles: [ '','Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee'] },
+    { name: 'Real-Time Analytics', path: '/analytics', icon: Activity, roles: [ '','Company Admin', 'General Manager', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Finance Manager', 'Finance', 'Manager'] },
   ];
 
   const financeItems = [
-    { name: 'GST Billing & Invoices', path: '/billing', icon: FileText, roles: ['Super Admin', 'Company Admin', 'Finance', 'Finance Manager', 'Finance Employee'] },
-    { name: 'Payroll Console', path: '/payroll', icon: IndianRupee, roles: ['Super Admin', 'Company Admin', 'HR', 'Finance', 'Finance Manager'] },
-    { name: 'My Monthly Payslips', path: '/payroll/payslips', icon: FileText, roles: ['Super Admin', 'Company Admin', 'HR', 'Manager', 'Team Leader', 'Inventory Manager', 'Warehouse Manager', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Sales Manager', 'Finance Manager', 'Employee', 'Inventory Employee', 'Warehouse Employee', 'Purchase Employee', 'Production Employee', 'Maintenance Employee', 'CRM Employee', 'Finance Employee', 'Sales Executive'] },
+    { name: 'GST Billing & Invoices', path: '/billing', icon: FileText, roles: [ '','Company Admin', 'Finance', 'Finance Manager', 'Finance Employee'] },
+    { name: 'Payroll Console', path: '/payroll', icon: IndianRupee, roles: ['', 'Company Admin', 'HR', 'Finance', 'Finance Manager'] },
+    { name: 'My Monthly Payslips', path: '/payroll/payslips', icon: FileText, roles: ['', 'Company Admin', 'HR', 'Manager', 'Team Leader', 'Inventory Manager', 'Warehouse Manager', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Sales Manager', 'Finance Manager', 'Employee', 'Inventory Employee', 'Warehouse Employee', 'Purchase Employee', 'Production Employee', 'Maintenance Employee', 'CRM Employee', 'Finance Employee', 'Sales Executive'] },
     { name: 'Subscription & Plans', path: '/subscription', icon: Sparkles, roles: ['Super Admin', 'Company Admin'] },
   ];
 
   const manufacturingItems = [
-    { name: 'Vendor Directory', path: '/manufacturing/vendors', icon: Truck, roles: ['Super Admin', 'Company Admin', 'Purchase Manager', 'Purchase Employee', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee'] },
-    { name: 'Inventory Master', path: '/manufacturing/inventory', icon: Boxes, roles: ['Super Admin', 'Company Admin', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee', 'Purchase Manager', 'Purchase Employee', 'Production Manager', 'Production Employee', 'Maintenance Manager', 'Maintenance Employee', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager'] },
-    { name: 'QR Inventory Scanner', path: '/qr-scanner', icon: Boxes, roles: ['Super Admin', 'Company Admin', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Manager'] },
-    { name: 'Warehouses', path: '/manufacturing/warehouses', icon: Building, roles: ['Super Admin', 'Company Admin', 'Warehouse Manager', 'Warehouse Employee', 'Inventory Manager', 'Inventory Employee', 'Manager'] },
-    { name: 'Purchase Workflow', path: '/manufacturing/purchase', icon: FileCheck, roles: ['Super Admin', 'Company Admin', 'Purchase Manager', 'Purchase Employee', 'Inventory Manager', 'Manager'] },
-    { name: 'Production Planning', path: '/manufacturing/production', icon: Factory, roles: ['Super Admin', 'Company Admin', 'Production Manager', 'Production Employee', 'Manager', 'Team Leader'] },
-    { name: 'Machine Maintenance', path: '/manufacturing/maintenance', icon: Wrench, roles: ['Super Admin', 'Company Admin', 'Maintenance Manager', 'Maintenance Employee', 'Production Manager', 'Manager'] },
+    { name: 'Vendor Directory', path: '/manufacturing/vendors', icon: Truck, roles: [' ', 'Company Admin', 'Purchase Manager', 'Purchase Employee', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee'] },
+    { name: 'Inventory Master', path: '/manufacturing/inventory', icon: Boxes, roles: ['', 'Company Admin', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee', 'Purchase Manager', 'Purchase Employee', 'Production Manager', 'Production Employee', 'Maintenance Manager', 'Maintenance Employee', 'Sales Manager', 'Sales Executive', 'Sales Employee', 'CRM Employee', 'Manager'] },
+    { name: 'QR Inventory Scanner', path: '/qr-scanner', icon: Boxes, roles: ['', '', 'Inventory Manager', 'Inventory Employee', 'Warehouse Manager', 'Warehouse Employee', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Manager'] },
+    { name: 'Warehouses', path: '/manufacturing/warehouses', icon: Building, roles: ['', 'Company Admin', 'Warehouse Manager', 'Warehouse Employee', 'Inventory Manager', 'Inventory Employee', 'Manager'] },
+    { name: 'Purchase Workflow', path: '/manufacturing/purchase', icon: FileCheck, roles: ['', 'Company Admin', 'Purchase Manager', 'Purchase Employee', 'Inventory Manager', 'Manager'] },
+    { name: 'Production Planning', path: '/manufacturing/production', icon: Factory, roles: ['', 'Company Admin', 'Production Manager', 'Production Employee', 'Manager', 'Team Leader'] },
+    { name: 'Machine Maintenance', path: '/manufacturing/maintenance', icon: Wrench, roles: ['', 'Company Admin', 'Maintenance Manager', 'Maintenance Employee', 'Production Manager', 'Manager'] },
   ];
 
   const hrmsItems = [
-    { name: 'HRMS Portal Hub', path: '/hrms', icon: Activity, roles: ['Super Admin', 'Company Admin', 'HR', 'Manager', 'Team Leader', 'Inventory Manager', 'Warehouse Manager', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Sales Manager', 'Finance Manager', 'Employee', 'Inventory Employee', 'Warehouse Employee', 'Purchase Employee', 'Production Employee', 'Maintenance Employee', 'CRM Employee', 'Finance Employee'] },
-    { name: 'User & Role Management', path: '/employees', icon: Users, roles: ['Super Admin', 'Company Admin', 'HR'] },
+    { name: 'HRMS Portal Hub', path: '/hrms', icon: Activity, roles: ['', 'Company Admin', 'HR', 'Manager', 'Team Leader', 'Inventory Manager', 'Warehouse Manager', 'Purchase Manager', 'Production Manager', 'Maintenance Manager', 'Sales Manager', 'Finance Manager', 'Employee', 'Inventory Employee', 'Warehouse Employee', 'Purchase Employee', 'Production Employee', 'Maintenance Employee', 'CRM Employee', 'Finance Employee'] },
+    { name: 'User & Role Management', path: '/employees', icon: Users, roles: ['', 'Company Admin', 'HR'] },
   ];
 
   const isItemVisible = (item) => {
@@ -101,7 +101,7 @@ const Sidebar = () => {
     if (item.path === '/payroll/payslips' || item.path === '/hrms') return true;
 
     // Super Admin & Company Admin have full platform access (subject to subscription tier filter above)
-    if (role === 'Super Admin' || role === 'Company Admin') return true;
+    //if (role === 'Super Admin' || role === 'Company Admin') return true;
 
     // Check explicit roles list
     if (item.roles && item.roles.includes(role)) return true;
