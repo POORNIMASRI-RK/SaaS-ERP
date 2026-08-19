@@ -15,10 +15,6 @@ import {
   Calendar,
   ArrowRight,
   CheckCheck,
-  Globe,
-  Layers,
-  Filter,
-  Check,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,24 +24,13 @@ const Navbar = () => {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotificationMenu, setShowNotificationMenu] = useState(false);
-  const [showTenantMenu, setShowTenantMenu] = useState(false);
-
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Multi-Tenant Company Selector State
-  const [companies, setCompanies] = useState([]);
-  const [activeTenant, setActiveTenant] = useState(null);
-
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
-  const tenantRef = useRef(null);
-
-  const isSuperAdmin = user?.role === 'Super Admin';
-  const isCompanyAdmin = user?.role === 'Company Admin';
 
   const handleLogout = () => {
-    localStorage.removeItem('selectedTenantId');
     logout();
     setShowProfileMenu(false);
     navigate('/login');
@@ -54,9 +39,6 @@ const Navbar = () => {
   useEffect(() => {
     if (user) {
       fetchNotifications();
-      if (isSuperAdmin || isCompanyAdmin) {
-        fetchCompanies();
-      }
 
       const interval = setInterval(fetchNotifications, 15000);
       const handleCustomEvent = () => fetchNotifications();
@@ -78,46 +60,10 @@ const Navbar = () => {
       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
         setShowNotificationMenu(false);
       }
-      if (tenantRef.current && !tenantRef.current.contains(event.target)) {
-        setShowTenantMenu(false);
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const fetchCompanies = async () => {
-    try {
-      const res = await API.get('/companies');
-      if (res.data.success) {
-        const companyList = res.data.companies || [];
-        setCompanies(companyList);
-
-        const savedTenantId = localStorage.getItem('selectedTenantId');
-        if (savedTenantId) {
-          const found = companyList.find((c) => c._id === savedTenantId);
-          if (found) setActiveTenant(found);
-        } else if (user?.tenant) {
-          setActiveTenant(user.tenant);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to fetch companies list:', err);
-    }
-  };
-
-  const handleSelectTenant = (company) => {
-    if (company) {
-      localStorage.setItem('selectedTenantId', company._id);
-      setActiveTenant(company);
-    } else {
-      localStorage.removeItem('selectedTenantId');
-      setActiveTenant(user?.tenant || null);
-    }
-    setShowTenantMenu(false);
-    window.dispatchEvent(new Event('tenant-changed'));
-    window.location.reload();
-  };
 
   const fetchNotifications = async () => {
     try {
@@ -184,8 +130,8 @@ const Navbar = () => {
 
   return (
     <header className="h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-6 flex items-center justify-between">
-      {/* Brand & Tenant Selector */}
-      <div className="flex items-center gap-4">
+      {/* Brand & Tenant Indicator */}
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 font-bold text-lg text-slate-100 tracking-wide">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
             <Building2 className="w-5 h-5" />
@@ -195,94 +141,13 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* Multi-Tenant Company Selector (Super Admin Only) or Read-Only Company Badge */}
-        {isSuperAdmin && companies.length > 0 ? (
-          <div className="relative border-l border-slate-800 pl-4" ref={tenantRef}>
-            <button
-              onClick={() => {
-                setShowTenantMenu(!showTenantMenu);
-                setShowProfileMenu(false);
-                setShowNotificationMenu(false);
-              }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-slate-700 text-xs transition-all cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <Building className="w-3.5 h-3.5 text-amber-400" />
-              <span className="font-bold text-slate-200 truncate max-w-[160px]">
-                {activeTenant ? activeTenant.name : 'All Tenant Companies'}
-              </span>
-              <span className="bg-slate-800 px-1.5 py-0.5 rounded text-[9px] font-mono text-slate-400">
-                {activeTenant ? activeTenant.code : 'GLOBAL'}
-              </span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
-                  showTenantMenu ? 'rotate-180 text-blue-400' : ''
-                }`}
-              />
-            </button>
-
-            {/* Tenant Selector Dropdown Menu */}
-            {showTenantMenu && (
-              <div className="absolute left-4 mt-2 w-72 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 text-xs font-bold text-slate-400">
-                  <span className="flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5 text-blue-400" />
-                    <span>Select Specific Tenant Company</span>
-                  </span>
-                </div>
-
-                <div className="space-y-1 max-h-60 overflow-y-auto">
-                  {isSuperAdmin && (
-                    <button
-                      onClick={() => handleSelectTenant(null)}
-                      className={`w-full flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                        !localStorage.getItem('selectedTenantId')
-                          ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                          : 'text-slate-300 hover:bg-slate-800/60'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-purple-400" />
-                        <span>All Tenant Companies (Global)</span>
-                      </span>
-                      {!localStorage.getItem('selectedTenantId') && <Check className="w-4 h-4 text-blue-400" />}
-                    </button>
-                  )}
-
-                  {companies.map((c) => {
-                    const isSelected = activeTenant?._id === c._id;
-                    return (
-                      <button
-                        key={c._id}
-                        onClick={() => handleSelectTenant(c)}
-                        className={`w-full flex items-center justify-between p-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
-                          isSelected
-                            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                            : 'text-slate-300 hover:bg-slate-800/60'
-                        }`}
-                      >
-                        <div className="text-left overflow-hidden">
-                          <p className="font-bold text-white truncate">{c.name}</p>
-                          <p className="text-[10px] text-slate-400 font-mono">Code: {c.code}</p>
-                        </div>
-                        {isSelected && <Check className="w-4 h-4 text-blue-400 shrink-0" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 pl-4 border-l border-slate-800 text-xs text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <Building className="w-3.5 h-3.5 text-blue-400" />
-            <span className="font-bold text-slate-200">{user?.tenant?.name || 'Company Portal'}</span>
-            {user?.tenant?.code && (
-              <span className="bg-slate-800 px-2 py-0.5 rounded text-[10px] uppercase font-mono text-slate-400">
-                {user.tenant.code}
-              </span>
-            )}
+        {user?.tenant && (
+          <div className="hidden md:flex items-center gap-2 pl-4 border-l border-slate-800 text-xs text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="font-semibold text-slate-300">{user.tenant.name}</span>
+            <span className="bg-slate-800 px-2 py-0.5 rounded text-[10px] uppercase font-mono text-slate-400">
+              {user.tenant.code}
+            </span>
           </div>
         )}
       </div>
@@ -307,9 +172,8 @@ const Navbar = () => {
             onClick={() => {
               setShowNotificationMenu(!showNotificationMenu);
               setShowProfileMenu(false);
-              setShowTenantMenu(false);
             }}
-            className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors relative cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg transition-colors relative"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
@@ -336,7 +200,7 @@ const Navbar = () => {
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="text-[11px] text-blue-400 hover:underline font-semibold cursor-pointer"
+                    className="text-[11px] text-blue-400 hover:underline font-semibold"
                   >
                     Mark all read
                   </button>
@@ -352,20 +216,18 @@ const Navbar = () => {
                     <div
                       key={n._id}
                       onClick={() => handleNotificationClick(n)}
-                      className={`pt-2 flex items-start gap-3 p-2.5 rounded-xl transition-colors cursor-pointer ${
-                        !n.isRead ? 'bg-blue-950/40 hover:bg-blue-900/40' : 'hover:bg-slate-800/40'
-                      }`}
+                      className={`pt-2 flex items-start gap-3 p-2.5 rounded-xl transition-colors cursor-pointer ${!n.isRead ? 'bg-blue-950/40 hover:bg-blue-900/40' : 'hover:bg-slate-800/40'
+                        }`}
                     >
                       <div
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 text-white ${
-                          n.type === 'leave_hr_approved'
-                            ? 'bg-emerald-600'
-                            : n.type === 'leave_manager_approved'
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 text-white ${n.type === 'leave_hr_approved'
+                          ? 'bg-emerald-600'
+                          : n.type === 'leave_manager_approved'
                             ? 'bg-cyan-600'
                             : n.type === 'leave_rejected'
-                            ? 'bg-rose-600'
-                            : 'bg-amber-600'
-                        }`}
+                              ? 'bg-rose-600'
+                              : 'bg-amber-600'
+                          }`}
                       >
                         <Calendar className="w-3.5 h-3.5" />
                       </div>
@@ -393,7 +255,7 @@ const Navbar = () => {
                     setShowNotificationMenu(false);
                     navigate('/notifications');
                   }}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all"
                 >
                   <span>View All Notifications Page</span>
                   <ArrowRight className="w-3.5 h-3.5 text-blue-400" />
@@ -410,9 +272,8 @@ const Navbar = () => {
               onClick={() => {
                 setShowProfileMenu(!showProfileMenu);
                 setShowNotificationMenu(false);
-                setShowTenantMenu(false);
               }}
-              className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-700/60 group cursor-pointer"
+              className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-700/60 group"
             >
               <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-xs shadow-sm">
                 {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
@@ -426,9 +287,8 @@ const Navbar = () => {
                 </p>
               </div>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-slate-400 transition-transform ${
-                  showProfileMenu ? 'rotate-180 text-blue-400' : ''
-                }`}
+                className={`w-3.5 h-3.5 text-slate-400 transition-transform ${showProfileMenu ? 'rotate-180 text-blue-400' : ''
+                  }`}
               />
             </button>
 
@@ -453,13 +313,13 @@ const Navbar = () => {
                     <span className="font-semibold text-slate-200">{user.role}</span>
                   </div>
 
-                  {(activeTenant || user.tenant) && (
+                  {user.tenant && (
                     <div className="flex items-center justify-between text-slate-400">
                       <span className="flex items-center gap-1.5">
-                        <Building className="w-3.5 h-3.5 text-amber-400" /> Active Company:
+                        <Building className="w-3.5 h-3.5 text-amber-400" /> Company:
                       </span>
                       <span className="font-semibold text-slate-200 truncate max-w-[130px]">
-                        {activeTenant ? activeTenant.name : user.tenant.name}
+                        {user.tenant.name}
                       </span>
                     </div>
                   )}
@@ -479,7 +339,7 @@ const Navbar = () => {
                 <div className="pt-3">
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/20 hover:border-transparent font-bold text-xs transition-all shadow-sm cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/20 hover:border-transparent font-bold text-xs transition-all shadow-sm"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out / Logout</span>

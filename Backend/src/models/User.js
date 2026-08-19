@@ -6,7 +6,6 @@ const ROLES = [
   'Company Admin',
   'Sales Manager',
   'Sales Executive',
-  'Sales Employee',
   'CRM Employee',
   'Purchase Manager',
   'Purchase Employee',
@@ -19,13 +18,10 @@ const ROLES = [
   'Maintenance Manager',
   'Maintenance Employee',
   'Finance Manager',
-  'Finance Controller',
   'Finance Employee',
-  'Finance',
   'HR',
   'Manager',
   'Team Leader',
-  'Employee',
 ];
 
 const userSchema = new mongoose.Schema(
