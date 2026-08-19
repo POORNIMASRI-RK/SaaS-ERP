@@ -105,6 +105,27 @@ app.use('/api/subscription', subscriptionRoutes);
 app.use('/api/qr-tracking', qrTrackingRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
+// Welcome Root Endpoint for Cloud Health & Status
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Manufacturing SaaS ERP Multi-Tenant API Engine is Live 🚀',
+    health: '/api/health',
+    version: '4.2.0',
+    status: 'ONLINE',
+  });
+});
+
+// Root Welcome Endpoint (for Render Health Checks & Status)
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Manufacturing SaaS ERP Multi-Tenant API Engine is Live 🚀',
+    health: '/api/health',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
