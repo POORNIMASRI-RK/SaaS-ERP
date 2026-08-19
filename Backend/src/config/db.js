@@ -21,9 +21,9 @@ export const connectDB = async () => {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 15000,
     });
-    console.log('✅ MongoDB Connected Successfully');
+    console.log('MongoDB Connected Successfully');
   } catch (error) {
-    console.error(`❌ [MongoDB Connection Error]: ${error.message}`);
+    console.error(` [MongoDB Connection Error]: ${error.message}`);
     console.error(
       '👉 [Atlas Network Access Check]: Please ensure 0.0.0.0/0 (allow all IPs) is added to MongoDB Atlas Network Access.'
     );

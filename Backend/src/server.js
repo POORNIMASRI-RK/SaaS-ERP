@@ -135,7 +135,6 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = (port) => {
   const server = app.listen(port, () => {
-    console.log(`==================================================`);
     console.log(`[SaaS ERP, HRMS, Payroll, GST Billing, CRM Engine Running on Port ${port}]`);
     console.log(`[API Base URL]: http://localhost:${port}/api`);
     console.log(`==================================================`);
