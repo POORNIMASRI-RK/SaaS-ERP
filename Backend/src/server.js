@@ -76,10 +76,14 @@ app.use(
   })
 );
 
-// Connect MongoDB Database and Auto-Seed Phase 4 Data
-connectDB().then(() => {
-  autoSeedManufacturing();
-});
+// Connect MongoDB Database and Auto-Seed Phase 4 Data safely
+connectDB()
+  .then(() => {
+    if (process.env.MONGODB_URI) {
+      autoSeedManufacturing().catch((err) => console.error('⚠️ [AutoSeed Warning]:', err.message));
+    }
+  })
+  .catch((err) => console.error('⚠️ [ConnectDB Error]:', err.message));
 
 // Mount API Routes
 app.use('/api/auth', authRoutes);
